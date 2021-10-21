@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+
+        <head>
+                <meta charset="utf-8">
+
+                <title>CHAINKEEPERS: Solidity gas optimization I</title>
+
+                <meta name="description" content="CHAINKEEPERS: Solidity gas optimization I">
+                <meta name="author" content="Ondřej Vostal">
+
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                <link rel="stylesheet" href="dist/reset.css">
+                <link rel="stylesheet" href="dist/reveal.css">
+                <link rel="stylesheet" href="dist/theme/chkp.css" id="theme">
+
+                <!-- Theme used for syntax highlighting of code -->
+                <link rel="stylesheet" href="plugin/highlight/monokai.css">
+        </head>
+
+        <body>
+
+                <div class="reveal">
+
+                        <!-- Any section element inside of this container is displayed as a slide -->
+                        <div class="slides">
+                                <section>
+                                        <a href="https://www.chainkeepers.io">
+                                                <img src="" alt="chainkeepers.io" style="height: 180px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+                                        </a>
+                                        <h3>CHAINKEEPERS</h3>
+                                        <p>Solidity gas optimization I</p>
+                                        <p>
+                                          <small>
+                                            <a href="mailto:ondrej@chainkeepers.io">Ondřej Vostal</a>
+                                            (<a href="https://www.chainkeepers.io">ChainKeepers</a>)
+                                          </small>
+                                        </p>
+                                </section>
+
+                                <section id="fragments">
+                                          <h2>agenda</h2>
+                                          <p class="fragment">ChainKeepers</p>
+                                          <p class="fragment">proč optimalizovat gas</p>
+                                          <p class="fragment">kolik co stojí</p>
+                                          <p class="fragment">jak postupovat vědecky</p>
+                                          <p class="fragment">hackujeme</p>
+                                </section>
+
+                                <section>
+                                        <section id="fragments">
+                                          <h2>chainkeepers</h2>
+                                          <small>keeping DeFi working</small>
+                                          <p class="fragment">využíváme arbitrážních příležitostí</p>
+                                          <p class="fragment">udržujeme v DeFi <em>rovnováhu</em> a <em>stabilitu</em></p>
+                                          <p class="fragment">věříme v <em>otevřené</em> a <em>programovatelné</em> finance</p>
+                                          <p class="fragment">budeme <em>významným</em> tvůrcem cen v DeFi</p>
+                                          <p class="fragment">díky <em>skvělému</em> týmu</p>
+                                          <p class="fragment">financování z <a href="https://www.mitonc.com">Miton C</a></p>
+                                          <p class="fragment">
+                                            vizionářskému mentorovi <a href="https://www.miton.cz/ondrej-raska">Ondřeji Raškovi</a>
+                                          </p>
+                                        </section>
+                                        <section>
+                                          <small>CHAINKEEPERS</small>
+                                          <h2>tým</h2>
+                                          <p><a href="https://www.linkedin.com/in/ondrej-vostal">Ondřej Vostal</a> - matematik</p>
+                                          <p><a href="https://www.linkedin.com/in/v6ak">Vítek Šesták</a> - polyglot programátor</p>
+                                          <p><a href="https://www.linkedin.com/in/marek-hauzr-8016077b">Marek Hauzr</a> - data science a engineering</p>
+                                          <p><a href="https://www.linkedin.com/in/milancermak">Milan Čermák</a> - programátor</p>
+                                          <p><a href="https://www.linkedin.com/in/shejbal">Jaroslav Shejbal</a> - devops</p>
+                                          <p><a href="https://www.linkedin.com/in/ondrejchaloupka">Ondřej Chaloupka</a> - programátor</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>CHAINKEEPERS</small>
+                                          <h2>stack</h2>
+                                          <p class="fragment"><em>GO</em> geth, <em>Rust</em> Solana</p>
+                                          <p class="fragment"><em>Solidity</em> kontrakty</p>
+                                          <p class="fragment"><em>Python</em> liquidation bot</p>
+                                          <p class="fragment"><em>Pandas</em>, <em>Grafana</em> reporting</p>
+                                          <p class="fragment"><em>Javascript</em> někdy to jinak nejde</p>
+                                          <p class="fragment"><em>Ansible</em></p>
+                                          <p class="fragment"><a href="https://www.chainkeepers.io/cs/hiring">otevřené pozice</a></p>
+                                        </section>
+                               </section>
+
+                                <section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>proč optimalizovat</h2>
+                                          <p class="fragment">extrémní gas price</p>
+                                          <p class="fragment">ušetřit peníze a zajistit pohodlí uživatelům</p>
+                                          <p class="fragment">vyhrát víc arbitráží</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>kolik co stojí</h2>
+                                          <p class="fragment">Solidity přeloží do EVM bytekódu</p>
+                                          <p class="fragment">každá instrukce stojí nějaký gas</p>
+                                          <p class="fragment">ceny se snaží reflektovat náklady</p>
+                                          <p class="fragment"><a href="https://github.com/djrtwo/evm-opcode-gas-costs">tabulka</a> - pozor na out-of-date informace</p>
+                                          <p class="fragment"><a href="https://medium.com/coinmonks/gas-optimization-in-solidity-part-i-variables-9d5775e43dde">hands-on</a> - pozor na out-of-date informace</p>
+                                          <p class="fragment"><a href="https://github.com/ethereum/yellowpaper">yellow paper</a> - vždy aktuální</p>
+                                          <p class="fragment"><a href="https://twitter.com/EdgarArout/status/1450825746679615492">Twitter</a> - vždy překvapí</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>příklad</h2>
+                                          <p class="fragment">Skutečný program</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>co má význam</h2>
+                                          <p class="fragment">výpočty - +/- 3</p>
+                                          <p class="fragment">CREATE - 32000</p>
+                                          <p class="fragment">SLOAD - 200, BALANCE - 400</p>
+                                          <p class="fragment">SSTORE - 20000, nebo 5000 (vynulování)</p>
+                                          <p class="fragment">CALL, CALLCODE, DELEGATECALL - fixed cost + delka argumentu</p>
+                                          <p class="fragment">=> runtime <em>abstraction</em> cost</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>vědecky</h2>
+                                          <p class="fragment">bleskurychlý vývoj blockchainu</p>
+                                          <p class="fragment">=> všechno je out-of-date</p>
+                                          <p class="fragment">praktické je spolehnout se na implementaci</p>
+                                        </section>
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>experiment</h2>
+                                          <p class="fragment">sada smart kontraktů</p>
+                                          <p class="fragment">spustím</p>
+                                          <p class="fragment">změřím gas used</p>
+                                          <p class="fragment">zaznamenám</p>
+                                          <p class="fragment">opakuju</p>
+                                        </section>
+
+                               <section id="fragments">
+                                 <small>optimalizace gas used</small>
+                                 <h2>hackujeme</h2>
+                               </section>
+
+                               </section>
+
+                        </div>
+
+                </div>
+
+                <script src="dist/reveal.js"></script>
+                <script src="plugin/zoom/zoom.js"></script>
+                <script src="plugin/notes/notes.js"></script>
+                <script src="plugin/search/search.js"></script>
+                <script src="plugin/markdown/markdown.js"></script>
+                <script src="plugin/highlight/highlight.js"></script>
+                <script>
+
+                        // Also available as an ES module, see:
+                        // https://revealjs.com/initialization/
+                        Reveal.initialize({
+                                controls: true,
+                                progress: true,
+                                center: true,
+                                hash: true,
+
+                                // Learn about plugins: https://revealjs.com/plugins/
+                                plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+                        });
+
+                </script>
+
+        </body>
+</html>
