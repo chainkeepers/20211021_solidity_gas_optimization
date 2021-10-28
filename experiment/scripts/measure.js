@@ -27,6 +27,42 @@ async function main() {
     report[name] = tx['receipt']['gasUsed'];
   }
 
+  for(const name of [
+    'unpackedStorage',
+    'packedStorage',
+  ]){
+    const tx = await contract[name].sendTransaction();
+    report[name] = tx['receipt']['gasUsed'];
+  }
+
+  const values = [1, 2, 3, 4, 5, 6];
+  for(const name of [
+    'incrementInStorage',
+    'incrementInMemory',
+    'incrementInMemoryCalldata',
+    'incrementInMemoryCalldataPlusOne',
+  ]){
+    const tx = await contract[name].sendTransaction(values);
+    report[name] = tx['receipt']['gasUsed'];
+  }
+
+  for(const name of [
+    'getUniWeth',
+    'getUniWethConst',
+    'getUniWethFixed',
+  ]){
+    const tx = await contract[name].sendTransaction();
+    report[name] = tx['receipt']['gasUsed'];
+  }
+
+  for(const name of [
+    'incSumValues',
+    'incSumValuesIndirect',
+  ]){
+    const tx = await contract[name].sendTransaction(values);
+    report[name] = tx['receipt']['gasUsed'];
+  }
+
   console.log(report);
 
 }
