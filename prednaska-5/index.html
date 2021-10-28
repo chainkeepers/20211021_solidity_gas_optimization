@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+        <head>
+                <meta charset="utf-8">
+
+                <title>CHAINKEEPERS: Solidity gas optimization II</title>
+
+                <meta name="description" content="CHAINKEEPERS: Solidity gas optimization II">
+                <meta name="author" content="Ondřej Vostal">
+
+                <meta name="apple-mobile-web-app-capable" content="yes">
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                <link rel="stylesheet" href="dist/reset.css">
+                <link rel="stylesheet" href="dist/reveal.css">
+                <link rel="stylesheet" href="dist/theme/chkp.css" id="theme">
+
+                <!-- Theme used for syntax highlighting of code -->
+                <link rel="stylesheet" href="plugin/highlight/monokai.css">
+        </head>
+
+        <body>
+
+                <div class="reveal">
+
+                        <!-- Any section element inside of this container is displayed as a slide -->
+                        <div class="slides">
+                                <section>
+                                        <a href="https://www.chainkeepers.io">
+                                                <img src="" alt="chainkeepers.io" style="height: 180px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+                                        </a>
+                                        <h3>CHAINKEEPERS</h3>
+                                        <p>Solidity gas optimization II</p>
+                                        <p>
+                                          <small>
+                                            <a href="mailto:ondrej@chainkeepers.io">Ondřej Vostal</a>
+                                            (<a href="https://www.chainkeepers.io">ChainKeepers</a>)
+                                          </small>
+                                        </p>
+                                </section>
+
+                                <section id="fragments">
+                                          <h2>agenda</h2>
+                                          <p class="fragment">opakování</p>
+                                          <p class="fragment">hackujeme</p>
+                                          <p class="fragment">ChainKeepers Internship</p>
+                                </section>
+
+                                <section>
+
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>co má význam</h2>
+                                          <p class="fragment">výpočty - +/- 3</p>
+                                          <p class="fragment">CREATE - 32000</p>
+                                          <p class="fragment">SLOAD - 200, BALANCE - 400</p>
+                                          <p class="fragment">SSTORE - 20000, nebo 5000 (vynulování)</p>
+                                          <p class="fragment">CALL, CALLCODE, DELEGATECALL - fixed cost + delka argumentu</p>
+                                          <p class="fragment">=> runtime <em>abstraction</em> cost</p>
+                                        </section>
+
+                                        <section id="fragments">
+                                          <small>optimalizace gas used</small>
+                                          <h2>experiment</h2>
+                                          <p class="fragment">sada smart kontraktů</p>
+                                          <p class="fragment">spustím</p>
+                                          <p class="fragment">změřím gas used</p>
+                                          <p class="fragment">zaznamenám</p>
+                                          <p class="fragment">opakuju</p>
+                                        </section>
+
+                               </section>
+
+                               <section id="fragments">
+                                 <small>optimalizace gas used</small>
+                                 <h2>hackujeme</h2>
+                               </section>
+
+                               <section>
+                                        <section id="fragments">
+                                          <small>CHAINKEEPERS</small>
+                                          <h2>internship</h2>
+                                          <p class="fragment">objem likvidací v Compoundu</p>
+                                          <p class="fragment">objem likvidací v AAVE na Arbitrum rollupu</p>
+                                          <p class="fragment">objem likvidací v AAVE na Avalanche blockchainu</p>
+                                          <p class="fragment">likvidační kontrakt pro Compound</p>
+                                          <p class="fragment">likvidační kontrakt pro AAVE na Arbitrum</p>
+                                          <p class="fragment">likvidační kontrakt pro AAVE na Avalanchi</p>
+                                          <p class="fragment"><a href="https://www.chainkeepers.io/cs/hiring">otevřené pozice</a></p>
+                                        </section>
+                               </section>
+
+                               <section id="fragments">
+                                 <small>chainkeepers</small>
+                                 <h2>děkuji za pozornost</h2>
+                               </section>
+
+                        </div>
+
+                </div>
+
+                <script src="dist/reveal.js"></script>
+                <script src="plugin/zoom/zoom.js"></script>
+                <script src="plugin/notes/notes.js"></script>
+                <script src="plugin/search/search.js"></script>
+                <script src="plugin/markdown/markdown.js"></script>
+                <script src="plugin/highlight/highlight.js"></script>
+                <script>
+
+                        // Also available as an ES module, see:
+                        // https://revealjs.com/initialization/
+                        Reveal.initialize({
+                                controls: true,
+                                progress: true,
+                                center: true,
+                                hash: true,
+
+                                // Learn about plugins: https://revealjs.com/plugins/
+                                plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+                        });
+
+                </script>
+
+        </body>
+</html>
